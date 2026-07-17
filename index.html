@@ -138,6 +138,11 @@ footer{padding:48px 0 32px;border-top:1px solid var(--border);margin-top:80px}
 .modal-close{position:sticky;top:0;float:right;background:var(--card);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
 @media(max-width:768px){.hero{padding:50px 0 40px}.section{padding:50px 0}.chat-section,.compliance{padding:28px 20px}.modal{padding:24px}nav{padding:12px 0}.insight-cards{grid-template-columns:1fr 1fr}}
+
+.lang-toggle{display:flex;gap:.3rem;justify-content:center;margin-top:.8rem}
+.lang-toggle button{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:.25rem .7rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .2s}
+.lang-toggle button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+[data-i18n]{transition:opacity .15s}
 </style>
 </head>
 <body>
@@ -214,7 +219,7 @@ footer{padding:48px 0 32px;border-top:1px solid var(--border);margin-top:80px}
     <p class="section-sub">5 free queries per day — no account, no credit card.</p>
     <div class="chat-section"><div class="chat-container">
       <div class="chat-messages" id="chatMessages"><div class="chat-bubble bot">Welcome to amiOracleAI — your AI strategy companion. Ask me for market analysis, competitive intelligence, risk scenarios, financial frameworks, or go-to-market strategies. Every insight cross-verified by two AI engines.<div class="meta">🤖 AI-generated · <span class="engine-tag">system</span></div></div></div>
-      <div class="chat-input-row"><input type="text" id="chatInput" placeholder="Analyze market for..., SWOT for..., Risk scenarios if..." maxlength="2000" autocomplete="off"><button class="btn btn-primary" id="chatSendBtn" onclick="sendChat()">→</button></div>
+      <div class="chat-input-row"><input type="text" id="chatInput" placeholder="Analyze market for..., SWOT for..., Risk scenarios if..." data-i18n="placeholder" maxlength="2000" autocomplete="off"><button class="btn btn-primary" id="chatSendBtn" onclick="sendChat()">→</button></div>
       <p class="chat-status" id="chatStatus"></p><p class="chat-limit" id="chatLimit"></p>
       <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:12px">🤖 AI-generated · Not financial advice · <a href="#" onclick="openModal('ai-act');return false">AI transparency</a> · <a href="#" onclick="openModal('privacy');return false">Privacy policy</a></p>
     </div></div>
@@ -256,6 +261,29 @@ async function sendChat(){if(chatBusy)return;const input=document.getElementById
 document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}});
 async function handleProPurchase(){const btn=document.getElementById('proBuyBtn');btn.textContent='Redirecting to Stripe...';btn.disabled=true;try{const res=await fetch(API_BASE+'/create-checkout-session',{method:'POST',headers:{'Content-Type':'application/json'}});const data=await res.json();if(data.url)window.location.href=data.url;else throw new Error('No URL')}catch(e){btn.textContent='Upgrade to Pro';btn.disabled=false;alert('Payment system is being configured. Contact hello@amioracleai.com')}}
 (function(){const p=new URLSearchParams(window.location.search);if(p.get('payment')==='success'){localStorage.setItem(PRO_KEY,'active');history.replaceState({},'',window.location.pathname);setTimeout(()=>addBubble('🎉 Welcome to Pro! Unlimited strategic insights unlocked. Ask the Oracle anything.','bot','✨ pro'),500)}if(p.get('payment')==='cancelled')history.replaceState({},'',window.location.pathname);updateLimitDisplay()})();
+
+
+// i18n
+const T = {"tagline": {"en": "AI Business Forecast & Strategy Companion — dual-engine verified", "ro": "Companion AI Prognoză & Strategie Business — verificat cu motor dual"}, "card1_h": {"en": "Market Analysis", "ro": "Analiză de Piață"}, "card1_p": {"en": "TAM/SAM/SOM, industry dynamics, and segment analysis", "ro": "TAM/SAM/SOM, dinamica industriei și analiza segmentelor"}, "card2_h": {"en": "Risk Planning", "ro": "Planificare Riscuri"}, "card2_p": {"en": "Best/worst/likely scenarios, risk matrices, and contingency plans", "ro": "Scenarii optimist/pesimist/probabil, matrice de risc și planuri de urgență"}, "card3_h": {"en": "Strategy", "ro": "Strategie"}, "card3_p": {"en": "SWOT, Porter's Five Forces, go-to-market, and decision frameworks", "ro": "SWOT, Cele 5 Forțe Porter, go-to-market și cadre de decizie"}, "chat_h2": {"en": "Ask about business strategy", "ro": "Întreabă despre strategie business"}, "sys_msg": {"en": "amiOracleAI — dual-engine verified strategy companion. 5 free questions/day.", "ro": "amiOracleAI — companion strategie verificat dual-engine. 5 întrebări gratuite/zi."}, "placeholder": {"en": "e.g. Do a SWOT analysis for a food delivery startup", "ro": "ex. Fă o analiză SWOT pentru un startup de livrare mâncare"}, "send": {"en": "Send", "ro": "Trimite"}, "free_note": {"en": "Free: 5 questions/day", "ro": "Gratuit: 5 întrebări/zi"}, "pro": {"en": "Pro:", "ro": "Pro:"}, "unlimited": {"en": "unlimited", "ro": "nelimitat"}, "upgrade": {"en": "Upgrade to Pro — €9.99/mo", "ro": "Upgrade la Pro — €9.99/lună"}, "feat_h2": {"en": "What amiOracleAI can help with", "ro": "Cum te poate ajuta amiOracleAI"}, "compliance_p": {"en": "Regulation-aware AI", "ro": "AI conform cu legislația"}, "footer_disc": {"en": "amiOracleAI is an AI strategy tool — not a substitute for licensed financial advisors.", "ro": "amiOracleAI este un instrument AI de strategie — nu înlocuiește consilierii financiari autorizați."}};
+let currentLang = localStorage.getItem('amioracleai_lang') || 'en';
+
+function switchLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('amioracleai_lang', lang);
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  document.getElementById('langRo').classList.toggle('active', lang === 'ro');
+  document.documentElement.lang = lang === 'ro' ? 'ro' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[key] && T[key][lang]) {
+      if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') el.placeholder = T[key][lang];
+      else el.textContent = T[key][lang];
+    }
+  });
+}
+
+// Apply saved language on load
+document.addEventListener('DOMContentLoaded', () => { if (currentLang !== 'en') switchLang(currentLang); });
 </script>
 </body>
 </html>
