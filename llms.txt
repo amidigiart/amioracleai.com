@@ -1,0 +1,27 @@
+# amiOracleAI
+> AI Business Forecast & Strategy Companion — dual-engine verified
+
+## What is amiOracleAI?
+amiOracleAI is a dual-engine AI strategy companion for founders, executives, and business analysts. Two AI models (Grok + DeepSeek) cross-verify every insight — market analysis, risk scenarios, and financial frameworks you can trust.
+
+## Features
+- Market analysis (TAM/SAM/SOM, industry dynamics, segment analysis)
+- Competitive intelligence (SWOT, Porter's Five Forces, positioning)
+- Risk & scenario planning (best/worst/likely, risk matrices)
+- Financial frameworks (unit economics, pricing, revenue models)
+- Go-to-market strategy (launch planning, growth levers)
+- Decision frameworks (ICE, RICE, build-vs-buy)
+
+## Architecture
+- Dual-engine: Grok 4.5 (xAI) + DeepSeek
+- Anti-confabulation: trigram-cosine concordance >= 0.45 required
+- Stateless: queries processed in real-time, never stored
+
+## Compliance
+- EU AI Act (Reg. 2024/1689) Art. 50 — limited-risk, full transparency
+- GDPR (Reg. 2016/679) — minimal data, no query storage
+
+## Links
+- Website: https://amioracleai.com
+- API: https://amioracleai-api-production.up.railway.app
+- Contact: hello@amioracleai.com
